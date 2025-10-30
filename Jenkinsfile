@@ -10,23 +10,22 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'در حال کامپایل با Maven Wrapper...'
-                sh 'chmod +x ./mvnw'
-                sh './mvnw clean compile'
+                echo 'در حال کامپایل با Maven...'
+                sh 'mvn clean compile'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'در حال اجرای تست‌ها...'
-                sh './mvnw test'
+                sh 'mvn test'
             }
         }
 
         stage('Package') {
             steps {
                 echo 'در حال ساخت JAR...'
-                sh './mvnw package -DskipTests'
+                sh 'mvn package -DskipTests'
             }
         }
     }
@@ -40,7 +39,7 @@ pipeline {
             echo 'بیلد شکست خورد!'
         }
         always {
-            junit 'target/surefire-reports/*.xml'  // اگر تست بود
+            junit testResults: 'target/surefire-reports/*.xml', allowEmptyResults: true
         }
     }
 }
