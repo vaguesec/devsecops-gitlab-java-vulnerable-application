@@ -11,7 +11,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'در حال کامپایل با Maven Wrapper...'
-                sh 'chmod +x ./mvnw'  // اجازه اجرا
+                sh 'chmod +x ./mvnw'
                 sh './mvnw clean compile'
             }
         }
@@ -40,7 +40,7 @@ pipeline {
             echo 'بیلد شکست خورد!'
         }
         always {
-            junit 'target/surefire-reports/*.xml'
+            junit 'target/surefire-reports/*.xml'  // اگر تست بود
         }
     }
 }
