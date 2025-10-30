@@ -25,7 +25,7 @@ pipeline {
             steps {
                 echo 'در حال اسکن کد با SonarQube...'
                 withSonarQubeEnv('SonarQube') {  // نام سرور از گام ۲
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=my-java-app -Dsonar.host.url=http://your-sonar-ip:9000'
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=my-java-app -Dsonar.host.url=http://192.168.71.133:9000'
                 }
             }
         }
