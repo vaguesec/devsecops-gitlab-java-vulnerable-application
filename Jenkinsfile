@@ -21,7 +21,14 @@ pipeline {
                 sh 'mvn test'
             }
         }
-
+        stage('SonarQube Analysis') {
+            steps {
+                echo 'در حال اسکن کد با SonarQube...'
+                withSonarQubeEnv('SonarQube') {  // نام سرور از گام ۲
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=my-java-app -Dsonar.host.url=http://your-sonar-ip:9000'
+                }
+            }
+        }
         stage('Package') {
             steps {
                 echo 'در حال ساخت JAR...'
