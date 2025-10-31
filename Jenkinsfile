@@ -26,14 +26,12 @@ pipeline {
             steps {
                 echo 'در حال اسکن کد با SonarQube...'
                 withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                    withSonarQubeEnv('SonarQube') {
-                        sh '''
-                            mvn sonar:sonar \
-                                -Dsonar.projectKey=my-java-app \
-                                -Dsonar.host.url=http://192.168.71.133:9000 \
-                                -Dsonar.token=$sonar
-                        '''
-                    }
+                    sh '''
+                        mvn sonar:sonar \
+                            -Dsonar.projectKey=my-java-app \
+                            -Dsonar.host.url=http://192.168.71.133:9000 \
+                            -Dsonar.token=$SONAR_TOKEN
+                    '''
                 }
             }
         }
