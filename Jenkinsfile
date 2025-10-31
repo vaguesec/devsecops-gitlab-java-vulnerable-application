@@ -21,14 +21,23 @@ pipeline {
                 sh 'mvn test'
             }
         }
+
         stage('SonarQube Analysis') {
             steps {
                 echo 'در حال اسکن کد با SonarQube...'
-                withSonarQubeEnv('SonarQube') {  // نام سرور از گام ۲
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=my-java-app -Dsonar.host.url=http://192.168.71.133:9000'
+                withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                    withSonarQubeEnv('SonarQube') {
+                        sh '''
+                            mvn sonar:sonar \
+                                -Dsonar.projectKey=my-java-app \
+                                -Dsonar.host.url=http://192.168.71.133:9000 \
+                                -Dsonar.token=$sonar
+                        '''
+                    }
                 }
             }
         }
+
         stage('Package') {
             steps {
                 echo 'در حال ساخت JAR...'
@@ -39,11 +48,11 @@ pipeline {
 
     post {
         success {
-            echo 'بیلد با موفقیت انجام شد!'
+            echo 'بیلد و اسکن با موفقیت انجام شد!'
             archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
         }
         failure {
-            echo 'بیلد شکست خورد!'
+            echo 'بیلد یا اسکن شکست خورد!'
         }
         always {
             junit testResults: 'target/surefire-reports/*.xml', allowEmptyResults: true
